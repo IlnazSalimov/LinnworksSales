@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LinnworksSales.WebApi.Data.Models.Entity;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace LinnworksSales.WebApi.Data.Repository.Interfaces
 {
@@ -26,7 +27,9 @@ namespace LinnworksSales.WebApi.Data.Repository.Interfaces
         /// Save entity object
         /// </summary>
         /// <param name="entity">Saved object</param>
-        Task<bool> SaveAsync(TEntity entity);
+        Task SaveAsync(TEntity entity);
+
+        Task<int> SaveChangesAsync();
 
         /// <summary>
         /// Update entity object

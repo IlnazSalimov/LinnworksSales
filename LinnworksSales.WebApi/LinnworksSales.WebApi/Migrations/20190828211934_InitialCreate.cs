@@ -9,7 +9,7 @@ namespace LinnworksSales.WebApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ItemType",
+                name: "ItemTypes",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
@@ -18,11 +18,11 @@ namespace LinnworksSales.WebApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ItemType", x => x.Id);
+                    table.PrimaryKey("PK_ItemTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Region",
+                name: "Regions",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
@@ -31,7 +31,7 @@ namespace LinnworksSales.WebApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Region", x => x.Id);
+                    table.PrimaryKey("PK_Regions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -47,23 +47,24 @@ namespace LinnworksSales.WebApi.Migrations
                 {
                     table.PrimaryKey("PK_Countries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Countries_Region_RegionId",
+                        name: "FK_Countries_Regions_RegionId",
                         column: x => x.RegionId,
-                        principalTable: "Region",
+                        principalTable: "Regions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "Sales",
                 columns: table => new
                 {
-                    OrderId = table.Column<long>(nullable: false)
+                    Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CountryForeignKey = table.Column<long>(nullable: true),
-                    ItemTypeForeignKey = table.Column<long>(nullable: true),
+                    CountryId = table.Column<long>(nullable: true),
+                    ItemTypeId = table.Column<long>(nullable: true),
                     SalesChanel = table.Column<int>(nullable: false),
                     OrderPriority = table.Column<int>(nullable: false),
+                    OrderId = table.Column<long>(nullable: false),
                     OrderDate = table.Column<DateTime>(nullable: false),
                     ShipDate = table.Column<DateTime>(nullable: false),
                     UnitsSold = table.Column<int>(nullable: false),
@@ -72,17 +73,17 @@ namespace LinnworksSales.WebApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.OrderId);
+                    table.PrimaryKey("PK_Sales", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_Countries_CountryForeignKey",
-                        column: x => x.CountryForeignKey,
+                        name: "FK_Sales_Countries_CountryId",
+                        column: x => x.CountryId,
                         principalTable: "Countries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Orders_ItemType_ItemTypeForeignKey",
-                        column: x => x.ItemTypeForeignKey,
-                        principalTable: "ItemType",
+                        name: "FK_Sales_ItemTypes_ItemTypeId",
+                        column: x => x.ItemTypeId,
+                        principalTable: "ItemTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -93,29 +94,29 @@ namespace LinnworksSales.WebApi.Migrations
                 column: "RegionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CountryForeignKey",
-                table: "Orders",
-                column: "CountryForeignKey");
+                name: "IX_Sales_CountryId",
+                table: "Sales",
+                column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_ItemTypeForeignKey",
-                table: "Orders",
-                column: "ItemTypeForeignKey");
+                name: "IX_Sales_ItemTypeId",
+                table: "Sales",
+                column: "ItemTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Sales");
 
             migrationBuilder.DropTable(
                 name: "Countries");
 
             migrationBuilder.DropTable(
-                name: "ItemType");
+                name: "ItemTypes");
 
             migrationBuilder.DropTable(
-                name: "Region");
+                name: "Regions");
         }
     }
 }

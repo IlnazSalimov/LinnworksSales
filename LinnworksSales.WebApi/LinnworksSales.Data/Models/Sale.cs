@@ -6,18 +6,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LinnworksSales.Data.Models
 {
-    [Table("Orders")]
+    [Table("Sales")]
     public class Sale : IEntity
     {
         [Key]
-        [Column("OrderId")]
         public long Id { get; set; }
-        [ForeignKey("CountryForeignKey")]
+        [ForeignKey("CountryId")]
         public Country Country { get; set; }
-        [ForeignKey("ItemTypeForeignKey")]
+        [ForeignKey("ItemTypeId")]
         public ItemType ItemType { get; set; }
         public SalesChanel SalesChanel { get; set; }
         public OrderPriority OrderPriority { get; set; }
+        public long OrderId { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime ShipDate { get; set; }
         public int UnitsSold { get; set; }

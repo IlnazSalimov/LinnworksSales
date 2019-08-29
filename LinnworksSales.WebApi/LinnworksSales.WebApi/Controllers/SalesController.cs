@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using LinnworksSales.WebApi.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using LinnworksSales.Data.Enums;
 
 namespace LinnworksSales.WebApi.Controllers
 {
@@ -18,15 +19,25 @@ namespace LinnworksSales.WebApi.Controllers
         /// <summary>
         /// Provide access to instructors in database
         /// </summary>
-        public ISaleRepository OrderRepository { get; set; }
+        public IRegionRepository RegionRepository { get; set; }
+
+        public ICountryRepository CountryRepository { get; set; }
+
+        public IItemTypeRepository ItemTypeRepository { get; set; }
+
+        public ISaleRepository SaleRepository { get; set; }
         /// <summary>
         /// Provide access to object mapper
         /// </summary>
         public ICommonMapper Mapper { get; }
 
-        public SalesController(ISaleRepository orderRepository, ICommonMapper mapper)
+        public SalesController(ISaleRepository orderRepository, IRegionRepository regionRepository,
+            ICountryRepository countryRepository, IItemTypeRepository itemTypeRepository, ICommonMapper mapper)
         {
-            OrderRepository = orderRepository;
+            SaleRepository = orderRepository;
+            RegionRepository = regionRepository;
+            CountryRepository = countryRepository;
+            ItemTypeRepository = itemTypeRepository;
             Mapper = mapper;
         }
 
@@ -37,7 +48,7 @@ namespace LinnworksSales.WebApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(OrderRepository.GetAll());
+            return Ok(SaleRepository.GetAll());
         }
 
         /// <summary>
@@ -48,7 +59,7 @@ namespace LinnworksSales.WebApi.Controllers
         [HttpGet("{id}", Name = "GetOrder")]
         public async Task<IActionResult> Get(int id)
         {
-            Sale dbOrder = await OrderRepository.GetAsync(id);
+            Sale dbOrder = await SaleRepository.GetAsync(id);
 
             if (dbOrder == null)
             {
@@ -72,10 +83,10 @@ namespace LinnworksSales.WebApi.Controllers
             }
 
             Sale orderToSave = Mapper.Map<Sale>(instructor);
-            if (!await OrderRepository.SaveAsync(orderToSave))
-            {
-                throw new Exception("Creating a instructor failed on save.");
-            }
+            //if (!await SaleRepository.SaveAsync(orderToSave))
+            //{
+            //    throw new Exception("Creating a instructor failed on save.");
+            //}
 
             SaleDto orderToReturn = Mapper.Map<SaleDto>(orderToSave);
             return CreatedAtRoute("GetOrder", new { id = orderToReturn.Id }, orderToReturn);
@@ -90,7 +101,7 @@ namespace LinnworksSales.WebApi.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody]SaleDto order)
         {
-            Sale dbOrder = await OrderRepository.GetAsync(id);
+            Sale dbOrder = await SaleRepository.GetAsync(id);
 
             if (order == null)
             {
@@ -99,7 +110,7 @@ namespace LinnworksSales.WebApi.Controllers
 
             Mapper.Map(order, dbOrder);
 
-            if (!OrderRepository.Update(dbOrder))
+            if (!SaleRepository.Update(dbOrder))
             {
                 throw new Exception($"Updating a instructor {id} failed on save.");
             }
@@ -115,13 +126,13 @@ namespace LinnworksSales.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            Sale order = await OrderRepository.GetAsync(id);
+            Sale order = await SaleRepository.GetAsync(id);
             if (order == null)
             {
                 return NotFound();
             }
 
-            if (!OrderRepository.Delete(order))
+            if (!SaleRepository.Delete(order))
             {
                 throw new Exception($"Deleting a instructor {id} failed on save.");
             }
@@ -134,7 +145,7 @@ namespace LinnworksSales.WebApi.Controllers
             string[] read;
             char[] seperators = { ',' };
             long size = files.Sum(f => f.Length);
-            List<SaleDenormalizedModel> sales = new List<SaleDenormalizedModel>();
+            List<SaleDenormalizedModel> salesDenormal = new List<SaleDenormalizedModel>();
 
             foreach (var formFile in files)
             {
@@ -151,7 +162,7 @@ namespace LinnworksSales.WebApi.Controllers
                             read = data.Split(seperators, StringSplitOptions.RemoveEmptyEntries);
                             try
                             {
-                                sales.Add(new SaleDenormalizedModel
+                                salesDenormal.Add(new SaleDenormalizedModel
                                 {
                                     Region = read[0],
                                     Country = read[1],
@@ -166,11 +177,55 @@ namespace LinnworksSales.WebApi.Controllers
                                     UnitCost = read[10]
                                 });
                             }
-                            catch(IndexOutOfRangeException e)
+                            catch(IndexOutOfRangeException)
                             {
                                 continue;
                             }
                         }
+
+                        List<Region> regions = salesDenormal.Select(s => s.Region).Distinct().Select(s => new Region() { Name = s }).ToList();
+                        foreach(var r in regions)
+                        {
+                            await RegionRepository.SaveAsync(r);
+                        }
+                        await RegionRepository.SaveChangesAsync();
+
+                        List<Country> countries = salesDenormal.GroupBy(s => s.Country).
+                            Select(s => new Country()
+                            {
+                                Name = s.Key,
+                                Region = regions.FirstOrDefault(r => r.Name == s.FirstOrDefault()?.Region)
+                            }).ToList();
+                        foreach (var c in countries)
+                        {
+                            await CountryRepository.SaveAsync(c);
+                        }
+                        await CountryRepository.SaveChangesAsync();
+
+                        List<ItemType> itemTypes = salesDenormal.Select(s => s.ItemType).Distinct().Select(s => new ItemType() { Name = s }).ToList();
+                        foreach (var i in itemTypes)
+                        {
+                            await ItemTypeRepository.SaveAsync(i);
+                        }
+                        await ItemTypeRepository.SaveChangesAsync();
+
+                        List<Sale> sales = salesDenormal.Select(s => new Sale()
+                        {
+                            Country = countries.FirstOrDefault(r => r.Name == s.Country),
+                            SalesChanel = Enum.Parse<SalesChanel>(s.SalesChanel),
+                            OrderDate = DateTime.Parse(s.OrderDate),
+                            OrderPriority = Enum.Parse<OrderPriority>(s.OrderPriority),
+                            ShipDate = DateTime.Parse(s.ShipDate),
+                            UnitCost = decimal.Parse(s.UnitCost),
+                            UnitPrice = decimal.Parse(s.UnitPrice),
+                            UnitsSold = int.Parse(s.UnitsSold),
+                            OrderId = int.Parse(s.OrderId)
+                        }).ToList();
+                        foreach (var s in sales)
+                        {
+                            await SaleRepository.SaveAsync(s);
+                        }
+                        await SaleRepository.SaveChangesAsync();
                     }
                 }
             }

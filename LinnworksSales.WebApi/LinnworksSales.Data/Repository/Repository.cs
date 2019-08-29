@@ -3,6 +3,7 @@ using LinnworksSales.WebApi.Data.Repository.Interfaces;
 using LinnworksSales.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace LinnworksSales.WebApi.Data.Repository
 {
@@ -33,16 +34,20 @@ namespace LinnworksSales.WebApi.Data.Repository
             return DbContext.Set<TEntity>();
         }
 
-        public async Task<bool> SaveAsync(TEntity entity)
+        public async Task SaveAsync(TEntity entity)
         {
             await DbContext.AddAsync(entity);
-            return DbContext.SaveChanges() > 0;
         }
 
         public bool Update(TEntity entity)
         {
             DbContext.Update(entity);
             return DbContext.SaveChanges() > 0;
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await DbContext.SaveChangesAsync();
         }
     }
 }

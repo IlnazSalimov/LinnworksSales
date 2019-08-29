@@ -5,6 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190828210534_InitialCreate.cs" />
+    <Compile Remove="Migrations\20190828210534_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190828210641_InitialCreate.cs" />
+    <Compile Remove="Migrations\20190828210641_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190828210838_InitialCreate.cs" />
+    <Compile Remove="Migrations\20190828210838_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190828210950_InitialCreate.cs" />
+    <Compile Remove="Migrations\20190828210950_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190828211224_InitialCreate.cs" />
+    <Compile Remove="Migrations\20190828211224_InitialCreate.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

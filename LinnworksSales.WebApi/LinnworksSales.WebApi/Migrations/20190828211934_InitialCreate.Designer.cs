@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LinnworksSales.WebApi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190824205758_InitialCreate")]
+    [Migration("20190828211934_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,7 @@ namespace LinnworksSales.WebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ItemType");
+                    b.ToTable("ItemTypes");
                 });
 
             modelBuilder.Entity("LinnworksSales.Data.Models.Region", b =>
@@ -61,21 +61,22 @@ namespace LinnworksSales.WebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Region");
+                    b.ToTable("Regions");
                 });
 
             modelBuilder.Entity("LinnworksSales.Data.Models.Sale", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("OrderId")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("CountryForeignKey");
+                    b.Property<long?>("CountryId");
 
-                    b.Property<long?>("ItemTypeForeignKey");
+                    b.Property<long?>("ItemTypeId");
 
                     b.Property<DateTime>("OrderDate");
+
+                    b.Property<long>("OrderId");
 
                     b.Property<int>("OrderPriority");
 
@@ -91,11 +92,11 @@ namespace LinnworksSales.WebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CountryForeignKey");
+                    b.HasIndex("CountryId");
 
-                    b.HasIndex("ItemTypeForeignKey");
+                    b.HasIndex("ItemTypeId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Sales");
                 });
 
             modelBuilder.Entity("LinnworksSales.Data.Models.Country", b =>
@@ -109,11 +110,11 @@ namespace LinnworksSales.WebApi.Migrations
                 {
                     b.HasOne("LinnworksSales.Data.Models.Country", "Country")
                         .WithMany()
-                        .HasForeignKey("CountryForeignKey");
+                        .HasForeignKey("CountryId");
 
                     b.HasOne("LinnworksSales.Data.Models.ItemType", "ItemType")
                         .WithMany()
-                        .HasForeignKey("ItemTypeForeignKey");
+                        .HasForeignKey("ItemTypeId");
                 });
 #pragma warning restore 612, 618
         }

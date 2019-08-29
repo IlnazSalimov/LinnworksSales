@@ -38,6 +38,9 @@ namespace LinnworksSales.WebApi
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("LinnworksSales.WebApi")));
             services.AddTransient<IRepository<IEntity>, Repository<IEntity>>();
             services.AddTransient<ISaleRepository, SaleRepository>();
+            services.AddTransient<IRegionRepository, RegionRepository>();
+            services.AddTransient<ICountryRepository, CountryRepository>();
+            services.AddTransient<IItemTypeRepository, ItemTypeRepository>();
             services.AddTransient<ICommonMapper, CommonMapper>();
 
             services.AddCors(options =>
@@ -56,6 +59,8 @@ namespace LinnworksSales.WebApi
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<DatabaseContext>();
+
+                context.Database.EnsureDeleted();
                 // Aply migrations. Create database if not exist.
                 context.Database.Migrate();
             }
