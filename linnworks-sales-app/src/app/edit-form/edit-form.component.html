@@ -1,0 +1,124 @@
+<form [formGroup]="editSaleForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+        <mat-card-header>
+            <mat-card-title>Sale Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Country</mat-label>
+                        <mat-select (change)="changeCountry($event)" formControlName="countryId">
+                            <mat-option *ngFor="let c of data.countries" [value]="c.id">
+                                {{c.name}}
+                            </mat-option>
+                        </mat-select>
+
+                        <mat-error *ngIf="editSaleForm.controls['itemTypeId'].hasError('required')">
+                            First name is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Item type</mat-label>
+                        <mat-select (change)="changeItemType($event)" formControlName="itemTypeId">
+                            <mat-option *ngFor="let i of data.itemTypes" [value]="i.id">
+                                {{i.name}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="editSaleForm.controls['itemTypeId'].hasError('required')">
+                            Item type is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Sales chanel" formControlName="salesChanel">
+                        <mat-error *ngIf="editSaleForm.controls['salesChanel'].hasError('required')">
+                            Sales chanel is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Order priority" formControlName="orderPriority">
+                        <mat-error *ngIf="editSaleForm.controls['orderPriority'].hasError('required')">
+                            Order priority is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Order Id" formControlName="orderId">
+                        <mat-error *ngIf="editSaleForm.controls['orderId'].hasError('required')">
+                            Order Id is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Order date" formControlName="orderDate">
+                        <mat-error *ngIf="editSaleForm.controls['orderDate'].hasError('required')">
+                            Order date is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Ship date" formControlName="shipDate">
+                        <mat-error *ngIf="editSaleForm.controls['shipDate'].hasError('required')">
+                            Ship date is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Units sold" formControlName="unitsSold">
+                        <mat-error *ngIf="editSaleForm.controls['unitsSold'].hasError('required')">
+                            Units sold is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Unit price" formControlName="unitPrice">
+                        <mat-error *ngIf="editSaleForm.controls['unitPrice'].hasError('required')">
+                            Unit price is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Unit cost" formControlName="unitCost">
+                        <mat-error *ngIf="editSaleForm.controls['unitCost'].hasError('required')">
+                            Unit cost is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
+        <span *ngIf="this.isLoading; else primaryBlock">Submitting . . .</span>
+        <ng-template #primaryBlock>Submit</ng-template>
+      </button>
+        </mat-card-actions>
+    </mat-card>
+</form>

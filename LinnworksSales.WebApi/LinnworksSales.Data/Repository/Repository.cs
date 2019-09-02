@@ -1,53 +1,72 @@
-﻿using LinnworksSales.WebApi.Data.Models.Entity;
-using LinnworksSales.WebApi.Data.Repository.Interfaces;
+﻿using LinnworksSales.Data.Data.Models.Entity;
+using LinnworksSales.Data.Data.Repository.Interfaces;
 using LinnworksSales.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Collections.Generic;
+using System;
+using Z.BulkOperations;
 
-namespace LinnworksSales.WebApi.Data.Repository
+namespace LinnworksSales.Data.Data.Repository
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
     {
-        private DatabaseContext DbContext { get; set; }
+        private DatabaseContext DatabaseContext { get; set; }
 
         public Repository() { }
 
         public Repository(DatabaseContext context)
         {
-            DbContext = context;
+            DatabaseContext = context;
         }
 
         public bool Delete(TEntity entity)
         {
-            DbContext.Remove(entity);
-            return DbContext.SaveChanges() > 0;
+            DatabaseContext.Remove(entity);
+            return DatabaseContext.SaveChanges() > 0;
         }
 
         public async Task<TEntity> GetAsync(int id)
         {
-            return await DbContext.FindAsync<TEntity>(id);
+            return await DatabaseContext.FindAsync<TEntity>(id);
+        }
+
+        public TEntity Get(int id)
+        {
+            return DatabaseContext.Find<TEntity>(id);
         }
 
         public IQueryable<TEntity> GetAll()
         {
-            return DbContext.Set<TEntity>();
+            return DatabaseContext.Set<TEntity>();
         }
 
-        public async Task SaveAsync(TEntity entity)
+        public async Task<bool> SaveAsync(TEntity entity)
         {
-            await DbContext.AddAsync(entity);
+            await DatabaseContext.AddAsync(entity);
+            return DatabaseContext.SaveChanges() > 0;
+        }
+
+        public async Task BulkInsertAsync(IEnumerable<TEntity> collection)
+        {
+            await DatabaseContext.BulkInsertAsync(collection);
+        }
+
+        public async Task BulkMergeAsync(IEnumerable<TEntity> collection)
+        {
+            await DatabaseContext.BulkMergeAsync(collection);
+        }
+
+        public async Task BulkMergeAsync(IEnumerable<TEntity> collection, Action<BulkOperation<TEntity>> options)
+        {
+            await DatabaseContext.BulkMergeAsync(collection, options);
         }
 
         public bool Update(TEntity entity)
         {
-            DbContext.Update(entity);
-            return DbContext.SaveChanges() > 0;
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await DbContext.SaveChangesAsync();
+            DatabaseContext.Update(entity);
+            return DatabaseContext.SaveChanges() > 0;
         }
     }
 }

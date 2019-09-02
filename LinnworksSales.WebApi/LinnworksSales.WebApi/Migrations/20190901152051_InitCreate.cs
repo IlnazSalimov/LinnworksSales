@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace LinnworksSales.WebApi.Migrations
+namespace LinnworksSales.Data.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace LinnworksSales.WebApi.Migrations
                 name: "ItemTypes",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true)
                 },
@@ -25,7 +25,7 @@ namespace LinnworksSales.WebApi.Migrations
                 name: "Regions",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true)
                 },
@@ -38,9 +38,9 @@ namespace LinnworksSales.WebApi.Migrations
                 name: "Countries",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RegionId = table.Column<long>(nullable: true),
+                    RegionId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -58,12 +58,12 @@ namespace LinnworksSales.WebApi.Migrations
                 name: "Sales",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CountryId = table.Column<long>(nullable: true),
-                    ItemTypeId = table.Column<long>(nullable: true),
-                    SalesChanel = table.Column<int>(nullable: false),
-                    OrderPriority = table.Column<int>(nullable: false),
+                    CountryId = table.Column<int>(nullable: true),
+                    ItemTypeId = table.Column<int>(nullable: true),
+                    SalesChanel = table.Column<string>(nullable: false),
+                    OrderPriority = table.Column<string>(nullable: false),
                     OrderId = table.Column<long>(nullable: false),
                     OrderDate = table.Column<DateTime>(nullable: false),
                     ShipDate = table.Column<DateTime>(nullable: false),

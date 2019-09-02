@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\ItemTypesController.cs" />
     <Compile Remove="Migrations\20190828210534_InitialCreate.cs" />
     <Compile Remove="Migrations\20190828210534_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20190828210641_InitialCreate.cs" />
@@ -15,6 +16,30 @@
     <Compile Remove="Migrations\20190828210950_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20190828211224_InitialCreate.cs" />
     <Compile Remove="Migrations\20190828211224_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190828211934_InitialCreate.cs" />
+    <Compile Remove="Migrations\20190828211934_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190829211027_IntialCreate.cs" />
+    <Compile Remove="Migrations\20190829211027_IntialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190831201841_InitialMigration.cs" />
+    <Compile Remove="Migrations\20190831201841_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20190901074912_InitCreate.cs" />
+    <Compile Remove="Migrations\20190901074912_InitCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190901075033_InitCreate.cs" />
+    <Compile Remove="Migrations\20190901075033_InitCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190901075141_InitCreate.cs" />
+    <Compile Remove="Migrations\20190901075141_InitCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190901080303_InitCreate.cs" />
+    <Compile Remove="Migrations\20190901080303_InitCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190901080509_InitCreate.cs" />
+    <Compile Remove="Migrations\20190901080509_InitCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190901081135_InitCreate.cs" />
+    <Compile Remove="Migrations\20190901081135_InitCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190901115529_InitCreate.cs" />
+    <Compile Remove="Migrations\20190901115529_InitCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190901140344_InitCreate.cs" />
+    <Compile Remove="Migrations\20190901140344_InitCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190901143534_InitCreate.cs" />
+    <Compile Remove="Migrations\20190901143534_InitCreate.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

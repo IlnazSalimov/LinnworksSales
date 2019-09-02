@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LinnworksSales.WebApi.Data.Repository.Interfaces
+namespace LinnworksSales.Data.Data.Repository.Interfaces
 {
     public interface IItemTypeRepository : IRepository<ItemType> { }
 }

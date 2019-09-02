@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace LinnworksSales.WebApi
+namespace LinnworksSales.Data
 {
     public class Program
     {

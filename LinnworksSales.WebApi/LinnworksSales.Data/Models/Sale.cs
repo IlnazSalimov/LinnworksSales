@@ -1,4 +1,4 @@
-﻿using LinnworksSales.WebApi.Data.Models.Entity;
+﻿using LinnworksSales.Data.Data.Models.Entity;
 using LinnworksSales.Data.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -10,10 +10,8 @@ namespace LinnworksSales.Data.Models
     public class Sale : IEntity
     {
         [Key]
-        public long Id { get; set; }
-        [ForeignKey("CountryId")]
+        public int Id { get; set; }
         public Country Country { get; set; }
-        [ForeignKey("ItemTypeId")]
         public ItemType ItemType { get; set; }
         public SalesChanel SalesChanel { get; set; }
         public OrderPriority OrderPriority { get; set; }

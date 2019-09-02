@@ -1,0 +1,25 @@
+.mat-column-select {
+    overflow: initial;
+  }
+
+  .full-width-table{
+      width: 100%;
+  }
+
+  .spinner-container{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+  }
+
+  .p1{
+    padding: 10px;
+}
+
+  .p2{
+      padding: 20px;
+  }
+
+  .f-r{
+      float: right;
+  }

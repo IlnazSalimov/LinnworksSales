@@ -1,16 +1,16 @@
-﻿using System;
+﻿using LinnworksSales.Data.Data.Repository.Interfaces;
+using LinnworksSales.Data.Enums;
+using LinnworksSales.Data.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LinnworksSales.WebApi.Data.Repository.Interfaces;
-using LinnworksSales.Data.Models;
-using Microsoft.AspNetCore.Mvc;
-using LinnworksSales.WebApi.Models;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using LinnworksSales.Data.Enums;
 
-namespace LinnworksSales.WebApi.Controllers
+namespace LinnworksSales.Data.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -46,9 +46,23 @@ namespace LinnworksSales.WebApi.Controllers
         /// </summary>
         /// <returns>Return JSON array with StatucCode 200</returns>
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(int? page, int count, string sortColumn, string direction = "asc", string country = "")
         {
-            return Ok(SaleRepository.GetAll());
+            PageEntitiesContainer<Sale> pageEntities = new PageEntitiesContainer<Sale>(
+                SaleRepository.GetAll().Include(s => s.Country).Include(s => s.ItemType), SaleRepository);
+
+            pageEntities.RegisterFilter(new Filter(typeof(Country), country));
+
+            switch (sortColumn)
+            {
+                case "orderDate":
+                    pageEntities.OrderBy(s => s.OrderDate, direction);
+                    break;
+            }
+
+            pageEntities.SetPage(page, count > 0 ? count : 50);
+
+            return Ok(Mapper.Map<PageEntitiesContainerDto<SaleDto>>(pageEntities));
         }
 
         /// <summary>
@@ -96,21 +110,21 @@ namespace LinnworksSales.WebApi.Controllers
         /// Action that only support the HTTP PUT method, which update instructor. 
         /// </summary>
         /// <param name="id">Instructor ID to be updated</param>
-        /// <param name="order">Instructor to update</param>
+        /// <param name="sale">Instructor to update</param>
         /// <returns>400 Bad Request if instructor by id doesn`t exist or 204 No Content if success</returns>
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody]SaleDto order)
+        public async Task<ActionResult> Put(int id, [FromBody]SalePutDto sale)
         {
-            Sale dbOrder = await SaleRepository.GetAsync(id);
+            Sale dbSale = await SaleRepository.GetAsync(id);
 
-            if (order == null)
+            if (sale == null)
             {
                 return BadRequest();
             }
 
-            Mapper.Map(order, dbOrder);
+            Mapper.Map(sale, dbSale);
 
-            if (!SaleRepository.Update(dbOrder))
+            if (!SaleRepository.Update(dbSale))
             {
                 throw new Exception($"Updating a instructor {id} failed on save.");
             }
@@ -177,18 +191,14 @@ namespace LinnworksSales.WebApi.Controllers
                                     UnitCost = read[10]
                                 });
                             }
-                            catch(IndexOutOfRangeException)
+                            catch (IndexOutOfRangeException)
                             {
                                 continue;
                             }
                         }
 
                         List<Region> regions = salesDenormal.Select(s => s.Region).Distinct().Select(s => new Region() { Name = s }).ToList();
-                        foreach(var r in regions)
-                        {
-                            await RegionRepository.SaveAsync(r);
-                        }
-                        await RegionRepository.SaveChangesAsync();
+                        await RegionRepository.BulkMergeAsync(regions);
 
                         List<Country> countries = salesDenormal.GroupBy(s => s.Country).
                             Select(s => new Country()
@@ -196,22 +206,15 @@ namespace LinnworksSales.WebApi.Controllers
                                 Name = s.Key,
                                 Region = regions.FirstOrDefault(r => r.Name == s.FirstOrDefault()?.Region)
                             }).ToList();
-                        foreach (var c in countries)
-                        {
-                            await CountryRepository.SaveAsync(c);
-                        }
-                        await CountryRepository.SaveChangesAsync();
+                        await CountryRepository.BulkMergeAsync(countries);
 
                         List<ItemType> itemTypes = salesDenormal.Select(s => s.ItemType).Distinct().Select(s => new ItemType() { Name = s }).ToList();
-                        foreach (var i in itemTypes)
-                        {
-                            await ItemTypeRepository.SaveAsync(i);
-                        }
-                        await ItemTypeRepository.SaveChangesAsync();
+                        await ItemTypeRepository.BulkMergeAsync(itemTypes);
 
                         List<Sale> sales = salesDenormal.Select(s => new Sale()
                         {
                             Country = countries.FirstOrDefault(r => r.Name == s.Country),
+                            ItemType = itemTypes.FirstOrDefault(t => t.Name == s.ItemType),
                             SalesChanel = Enum.Parse<SalesChanel>(s.SalesChanel),
                             OrderDate = DateTime.Parse(s.OrderDate),
                             OrderPriority = Enum.Parse<OrderPriority>(s.OrderPriority),
@@ -221,11 +224,7 @@ namespace LinnworksSales.WebApi.Controllers
                             UnitsSold = int.Parse(s.UnitsSold),
                             OrderId = int.Parse(s.OrderId)
                         }).ToList();
-                        foreach (var s in sales)
-                        {
-                            await SaleRepository.SaveAsync(s);
-                        }
-                        await SaleRepository.SaveChangesAsync();
+                        await SaleRepository.BulkMergeAsync(sales, options => options.ColumnPrimaryKeyExpression = c => c.OrderId);
                     }
                 }
             }

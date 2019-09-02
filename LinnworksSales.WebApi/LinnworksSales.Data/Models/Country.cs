@@ -1,4 +1,4 @@
-﻿using LinnworksSales.WebApi.Data.Models.Entity;
+﻿using LinnworksSales.Data.Data.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,9 +11,10 @@ namespace LinnworksSales.Data.Models
     public class Country : IEntity
     {
         [Key]
-        public long Id { get; set; }
-        [ForeignKey("RegionId")]
+        public int Id { get; set; }
         public Region Region { get; set; }
         public string Name { get; set; }
+
+        public List<Sale> Sales { get; set; }
     }
 }

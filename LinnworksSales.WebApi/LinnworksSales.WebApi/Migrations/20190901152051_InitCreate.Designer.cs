@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace LinnworksSales.WebApi.Migrations
+namespace LinnworksSales.Data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190828211934_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20190901152051_InitCreate")]
+    partial class InitCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,13 +23,13 @@ namespace LinnworksSales.WebApi.Migrations
 
             modelBuilder.Entity("LinnworksSales.Data.Models.Country", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name");
 
-                    b.Property<long?>("RegionId");
+                    b.Property<int?>("RegionId");
 
                     b.HasKey("Id");
 
@@ -40,7 +40,7 @@ namespace LinnworksSales.WebApi.Migrations
 
             modelBuilder.Entity("LinnworksSales.Data.Models.ItemType", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -53,7 +53,7 @@ namespace LinnworksSales.WebApi.Migrations
 
             modelBuilder.Entity("LinnworksSales.Data.Models.Region", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -66,21 +66,23 @@ namespace LinnworksSales.WebApi.Migrations
 
             modelBuilder.Entity("LinnworksSales.Data.Models.Sale", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("CountryId");
+                    b.Property<int?>("CountryId");
 
-                    b.Property<long?>("ItemTypeId");
+                    b.Property<int?>("ItemTypeId");
 
                     b.Property<DateTime>("OrderDate");
 
                     b.Property<long>("OrderId");
 
-                    b.Property<int>("OrderPriority");
+                    b.Property<string>("OrderPriority")
+                        .IsRequired();
 
-                    b.Property<int>("SalesChanel");
+                    b.Property<string>("SalesChanel")
+                        .IsRequired();
 
                     b.Property<DateTime>("ShipDate");
 
@@ -102,18 +104,18 @@ namespace LinnworksSales.WebApi.Migrations
             modelBuilder.Entity("LinnworksSales.Data.Models.Country", b =>
                 {
                     b.HasOne("LinnworksSales.Data.Models.Region", "Region")
-                        .WithMany()
+                        .WithMany("Countries")
                         .HasForeignKey("RegionId");
                 });
 
             modelBuilder.Entity("LinnworksSales.Data.Models.Sale", b =>
                 {
                     b.HasOne("LinnworksSales.Data.Models.Country", "Country")
-                        .WithMany()
+                        .WithMany("Sales")
                         .HasForeignKey("CountryId");
 
                     b.HasOne("LinnworksSales.Data.Models.ItemType", "ItemType")
-                        .WithMany()
+                        .WithMany("Sales")
                         .HasForeignKey("ItemTypeId");
                 });
 #pragma warning restore 612, 618

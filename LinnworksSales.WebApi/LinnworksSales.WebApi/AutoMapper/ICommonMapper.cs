@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LinnworksSales.WebApi.Models
+namespace LinnworksSales.Data.Models
 {
     public interface ICommonMapper
     {

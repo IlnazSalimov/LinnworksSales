@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinnworksSales.WebApi.Models;
-using LinnworksSales.WebApi.Data.Models.Entity;
-using LinnworksSales.WebApi.Data.Repository;
-using LinnworksSales.WebApi.Data.Repository.Interfaces;
+using LinnworksSales.Data.Models;
+using LinnworksSales.Data.Data.Models.Entity;
+using LinnworksSales.Data.Data.Repository;
+using LinnworksSales.Data.Data.Repository.Interfaces;
 using LinnworksSales.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,7 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace LinnworksSales.WebApi
+namespace LinnworksSales.Data
 {
     public class Startup
     {
@@ -59,8 +59,6 @@ namespace LinnworksSales.WebApi
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<DatabaseContext>();
-
-                context.Database.EnsureDeleted();
                 // Aply migrations. Create database if not exist.
                 context.Database.Migrate();
             }

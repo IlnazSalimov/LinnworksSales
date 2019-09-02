@@ -2,18 +2,25 @@
 using System.Text;
 using AutoMapper;
 using LinnworksSales.Data.Models;
-using LinnworksSales.WebApi.Data.Models;
+using LinnworksSales.Data.AutoMapper;
+using LinnworksSales.Data.Data.Models;
+using LinnworksSales.Data.Data.Repository.Interfaces;
 
-namespace LinnworksSales.WebApi.Models
+namespace LinnworksSales.Data.Models
 {
     public class CommonMapper : ICommonMapper
     {
         public IMapper Mapper { get; set; }
 
-        public CommonMapper()
+        public ICountryRepository CountryRepository { get; set; }
+        public IItemTypeRepository ItemTypeRepository { get; set; }
+
+        public CommonMapper(ICountryRepository CountryRepository, IItemTypeRepository ItemTypeRepository)
         {
             MapperConfiguration config = GetConfiguration();
             Mapper = config.CreateMapper();
+            this.CountryRepository = CountryRepository;
+            this.ItemTypeRepository = ItemTypeRepository;
         }
 
         public object Map(object source, Type sourceType, Type destinationType)
@@ -36,11 +43,18 @@ namespace LinnworksSales.WebApi.Models
         {
             return new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Sale, SaleDto>().
+                cfg.CreateMap<Country, CountryDto>();
+                cfg.CreateMap<CountryDto, Country>();
+                cfg.CreateMap<ItemType, ItemTypeDto>();
+                cfg.CreateMap<ItemTypeDto, ItemType>();
+                cfg.CreateMap<Sale, SaleDto>();
+                cfg.CreateMap<SalePutDto, Sale>().
                     ForMember(destinationMember => destinationMember.Country,
-                        expression => expression.MapFrom(m => m.Country.Name)).
+                        expression => expression.MapFrom(m => CountryRepository.Get(m.CountryId))).
                     ForMember(destinationMember => destinationMember.ItemType,
-                        expression => expression.MapFrom(m => m.ItemType.Name));
+                        expression => expression.MapFrom(m => ItemTypeRepository.Get(m.ItemTypeId)));
+
+                cfg.CreateMap(typeof(PageEntitiesContainer<>), typeof(PageEntitiesContainerDto<>)).ConvertUsing(typeof(PageEntitiesContainerConverter<,>));
             });
         }
     }
