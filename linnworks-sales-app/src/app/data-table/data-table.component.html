@@ -214,8 +214,8 @@
                 </mat-card-content>
 
                 <mat-card-actions>
-                    <button mat-raised-button color="primary" type="submit" [disabled]="isSoldOrdersFormLoading">
-                        <span *ngIf="this.isSoldOrdersFormLoading; else primaryBlock">Calculating . . .</span>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="isProfitFormLoading">
+                        <span *ngIf="this.isProfitFormLoading; else primaryBlock">Calculating . . .</span>
                         <ng-template #primaryBlock>Calculate</ng-template>
                     </button>
                 </mat-card-actions>
