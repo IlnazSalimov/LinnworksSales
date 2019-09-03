@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace LinnworksSales.Data.Migrations
+namespace LinnworksSales.WebApi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190901152051_InitCreate")]
-    partial class InitCreate
+    [Migration("20190902230847_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

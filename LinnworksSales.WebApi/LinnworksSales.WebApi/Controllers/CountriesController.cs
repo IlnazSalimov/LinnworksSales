@@ -22,11 +22,11 @@ namespace LinnworksSales.Data.Controllers
         }
 
         /// <summary>
-        /// Action that only support the HTTP GET method wich return all instructors. 
+        /// Action that only support the HTTP GET method wich return all countries. 
         /// </summary>
         /// <returns>Return JSON array with StatucCode 200</returns>
         [HttpGet]
-        public IActionResult Get(int? page, int count, string sortColumn, string direction = "asc")
+        public IActionResult Get()
         { 
             return Ok(Mapper.Map<List<CountryDto>>(CountryRepository.GetAll()));
         }

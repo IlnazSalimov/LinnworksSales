@@ -9,6 +9,7 @@ namespace LinnworksSales.Data.Models
 {
     public class ItemTypeDto : IEntity
     {
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
     }

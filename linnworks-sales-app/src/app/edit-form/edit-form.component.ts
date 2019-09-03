@@ -2,9 +2,6 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { SaleService } from '../services/sale.service';
-import { Sale } from '../models/sale';
-import { Country } from '../models/country';
-import { ItemType } from '../models/item-type';
 
 @Component({
   selector: 'app-edit-form',
@@ -18,7 +15,7 @@ export class EditFormComponent {
     unitCost: [null, Validators.required],
     unitPrice: [null, Validators.required],
     unitsSold: [null, Validators.required],
-    countryId: [],
+    countryId: [null, Validators.required],
     itemTypeId: [],
     salesChanel: [],
     orderPriority: [],
@@ -45,7 +42,7 @@ export class EditFormComponent {
     this.editSaleForm.patchValue(data.sale);
   }
 
-  onSubmit() {
+  private onSubmit() {
     if (!this.editSaleForm.valid) {
       return;
     }
@@ -53,24 +50,24 @@ export class EditFormComponent {
     this.isLoading = true;
     this.saleService.update(sale,
       (result) => {
-        this._snackBar.open('Sale updated successfully.', '', { duration: 3000 });
+        this._snackBar.open('Sale updated successfully.', '', { duration: 6000 });
         this.dialogRef.close();
         this.isLoading = false
       },
       (result) => {
-        this._snackBar.open(`Updating a sale failed. ${result.message}`, '', { duration: 3000 });
+        this._snackBar.open(`Updating a sale failed. ${result.message}`, '', { duration: 6000 });
         this.dialogRef.close();
         this.isLoading = false
       });
   }
 
-  changeCountry(e) {
+  private changeCountry(e) {
     this.countryId.setValue(e.target.value, {
       onlySelf: true
     })
   }
 
-  changeItemType(e) {
+  private changeItemType(e) {
     this.itemTypeId.setValue(e.target.value, {
       onlySelf: true
     })

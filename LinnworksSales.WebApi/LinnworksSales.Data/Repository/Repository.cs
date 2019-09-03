@@ -27,6 +27,11 @@ namespace LinnworksSales.Data.Data.Repository
             return DatabaseContext.SaveChanges() > 0;
         }
 
+        public async Task BulkDeleteAsync(IEnumerable<TEntity> entities)
+        {
+            await DatabaseContext.BulkDeleteAsync<TEntity>(entities);
+        }
+
         public async Task<TEntity> GetAsync(int id)
         {
             return await DatabaseContext.FindAsync<TEntity>(id);
@@ -50,17 +55,17 @@ namespace LinnworksSales.Data.Data.Repository
 
         public async Task BulkInsertAsync(IEnumerable<TEntity> collection)
         {
-            await DatabaseContext.BulkInsertAsync(collection);
+            await DatabaseContext.BulkInsertAsync<TEntity>(collection);
         }
 
         public async Task BulkMergeAsync(IEnumerable<TEntity> collection)
         {
-            await DatabaseContext.BulkMergeAsync(collection);
+            await DatabaseContext.BulkMergeAsync<TEntity>(collection);
         }
 
         public async Task BulkMergeAsync(IEnumerable<TEntity> collection, Action<BulkOperation<TEntity>> options)
         {
-            await DatabaseContext.BulkMergeAsync(collection, options);
+            await DatabaseContext.BulkMergeAsync<TEntity>(collection, options);
         }
 
         public bool Update(TEntity entity)

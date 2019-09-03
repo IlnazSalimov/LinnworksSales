@@ -9,25 +9,25 @@ namespace LinnworksSales.Data.Models
 {
     public class PageEntitiesContainer<TEntity> where TEntity : class, IEntity
     {
-        private readonly IFilterableRepository<TEntity> _filterByRepository;
+        private readonly IFilterableRepository<TEntity> filterByRepository;
         private readonly IList<Filter> _lazyFilters = new List<Filter>();
         private IQueryable<TEntity> entities;
-        private IEnumerable<TEntity> _onePageItems;
-        private int _totalItemsCount;
+        private IEnumerable<TEntity> onePageItems;
+        private int totalItemsCount;
 
         public PageEntitiesContainer(IQueryable<TEntity> entities, IFilterableRepository<TEntity> filterByRepository)
         {
             this.entities = entities;
-            _filterByRepository = filterByRepository;
+            this.filterByRepository = filterByRepository;
         }
 
         public int TotalItemsCount
         {
             get
             {
-                if (_onePageItems != null)
+                if (onePageItems != null)
                 {
-                    return _totalItemsCount;
+                    return totalItemsCount;
                 }
 
                 return QueryableItems.Count();
@@ -38,9 +38,9 @@ namespace LinnworksSales.Data.Models
         {
             get
             {
-                if (_lazyFilters.Count != 0 && _filterByRepository != null)
+                if (_lazyFilters.Count != 0 && filterByRepository != null)
                 {
-                    entities = _filterByRepository.FilterBy(entities, _lazyFilters.ToArray());
+                    entities = filterByRepository.FilterBy(entities, _lazyFilters.ToArray());
                     _lazyFilters.Clear();
                 }
 
@@ -52,12 +52,12 @@ namespace LinnworksSales.Data.Models
         {
             get
             {
-                if (_onePageItems == null)
+                if (onePageItems == null)
                 {
                     SetPage(1, 50);
                 }
 
-                return _onePageItems;
+                return onePageItems;
             }
         }
 
@@ -75,8 +75,8 @@ namespace LinnworksSales.Data.Models
         {
             var skipItemsCount = page.HasValue && page.Value > 0 ? (page.Value - 1) * count : 0;
 
-            _onePageItems = QueryableItems.Skip(skipItemsCount).Take(count);
-            _totalItemsCount = QueryableItems.Count();
+            onePageItems = QueryableItems.Skip(skipItemsCount).Take(count);
+            totalItemsCount = QueryableItems.Count();
         }
 
         public void OrderBy<TKey>(Expression<Func<TEntity, TKey>> expression, string direction = "asc")

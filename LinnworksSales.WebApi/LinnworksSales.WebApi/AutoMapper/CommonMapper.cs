@@ -47,7 +47,11 @@ namespace LinnworksSales.Data.Models
                 cfg.CreateMap<CountryDto, Country>();
                 cfg.CreateMap<ItemType, ItemTypeDto>();
                 cfg.CreateMap<ItemTypeDto, ItemType>();
-                cfg.CreateMap<Sale, SaleDto>();
+                cfg.CreateMap<Sale, SaleDto>().
+                ForMember(destinationMember => destinationMember.OrderDate,
+                        expression => expression.MapFrom(m => m.OrderDate.ToShortDateString())).
+                    ForMember(destinationMember => destinationMember.ShipDate,
+                        expression => expression.MapFrom(m => m.ShipDate.ToShortDateString()));
                 cfg.CreateMap<SalePutDto, Sale>().
                     ForMember(destinationMember => destinationMember.Country,
                         expression => expression.MapFrom(m => CountryRepository.Get(m.CountryId))).

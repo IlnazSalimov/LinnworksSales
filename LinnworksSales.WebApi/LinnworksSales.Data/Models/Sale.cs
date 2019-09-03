@@ -21,5 +21,11 @@ namespace LinnworksSales.Data.Models
         public int UnitsSold { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal UnitCost { get; set; }
+        [NotMapped]
+        public decimal TotalRevenue => UnitPrice * UnitsSold;
+        [NotMapped]
+        public decimal TotalCost => UnitCost * UnitsSold;
+        [NotMapped]
+        public decimal TotalProfit => TotalRevenue - TotalCost;
     }
 }

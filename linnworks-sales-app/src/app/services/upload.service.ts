@@ -6,8 +6,9 @@ import {
     HttpResponse,
 } from '@angular/common/http'
 import { Observable, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
-const url = 'http://localhost:17258/api/sales/import'
+const salesImportUrl = `${environment.apiUri}/import/sales`
 
 @Injectable()
 export class UploadService {
@@ -25,7 +26,7 @@ export class UploadService {
 
             // create a http-post request and pass the form
             // tell it to report the upload progress
-            const req = new HttpRequest('POST', url, formData, {
+            const req = new HttpRequest('POST', salesImportUrl, formData, {
                 reportProgress: true
             });
 

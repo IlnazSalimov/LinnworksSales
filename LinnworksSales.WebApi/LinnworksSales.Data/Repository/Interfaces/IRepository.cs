@@ -39,15 +39,16 @@ namespace LinnworksSales.Data.Data.Repository.Interfaces
         Task BulkInsertAsync(IEnumerable<TEntity> collection);
 
         /// <summary>
-        /// The EF extension method let you merge (insert or update/Upsert) a large number of entities in your database.
+        /// The EF extension method let you merge (insert or update/Upsert) a large number of entities in database.
         /// </summary>
         /// <param name="collection">Entities collection</param>
         Task BulkMergeAsync(IEnumerable<TEntity> collection);
 
         /// <summary>
-        /// The EF extension method let you merge (insert or update/Upsert) a large number of entities in your database.
+        /// The EF extension method let you merge (insert or update/Upsert) a large number of entities in database.
         /// </summary>
         /// <param name="collection">Entities collection</param>
+        /// <param name="options">Let you use a lambda expression to customize the way entities are inserted or updated</param>
         Task BulkMergeAsync(IEnumerable<TEntity> collection, Action<BulkOperation<TEntity>> options);
 
         /// <summary>
@@ -61,5 +62,11 @@ namespace LinnworksSales.Data.Data.Repository.Interfaces
         /// </summary>
         /// <param name="entity">Deleted object</param>
         bool Delete(TEntity entity);
+
+        /// <summary>
+        /// Bulk delete entity objects
+        /// </summary>
+        /// <param name="entities">Deleted objects</param>
+        Task BulkDeleteAsync(IEnumerable<TEntity> entities);
     }
 }

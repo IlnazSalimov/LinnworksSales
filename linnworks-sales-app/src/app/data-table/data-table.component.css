@@ -1,25 +1,53 @@
-.mat-column-select {
-    overflow: initial;
-  }
+.full-width-table {
+    width: 100%;
+}
 
-  .full-width-table{
-      width: 100%;
-  }
+.sales {
+    flex: 0 0 75%;
+    max-width: 75%;
+}
 
-  .spinner-container{
-      position: absolute;
-      top: 50%;
-      left: 50%;
-  }
+.report {
+    flex: 0 0 20%;
+    max-width: 20%;
+}
 
-  .p1{
+.spinner-container {
+    position: absolute;
+    top: 50%;
+    left: 35%;
+}
+
+.p1 {
     padding: 10px;
 }
 
-  .p2{
-      padding: 20px;
-  }
+.p-l1 {
+    padding-left: 10px;
+}
 
-  .f-r{
-      float: right;
-  }
+.p-t2 {
+    padding-top: 20px
+}
+
+.p-l2 {
+    padding-left: 20px;
+}
+
+.m-l2 {
+    margin-left: 20px;
+}
+
+.row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.col {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
