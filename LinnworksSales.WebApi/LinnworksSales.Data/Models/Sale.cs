@@ -13,7 +13,9 @@ namespace LinnworksSales.Data.Models
         public int Id { get; set; }
         public Country Country { get; set; }
         public ItemType ItemType { get; set; }
+        // Denormalize this column to improve performance
         public SalesChanel SalesChanel { get; set; }
+        // Denormalize this column to improve performance
         public OrderPriority OrderPriority { get; set; }
         public long OrderId { get; set; }
         public DateTime OrderDate { get; set; }

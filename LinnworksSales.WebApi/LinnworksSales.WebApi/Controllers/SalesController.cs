@@ -50,7 +50,6 @@ namespace LinnworksSales.Data.Controllers
         [HttpGet]
         public IActionResult Get(int? page, int count, string sortColumn, string direction = "asc", string country = "")
         {
-            Logger.LogDebug("Hi");
             PageEntitiesContainer<Sale> pageEntities = new PageEntitiesContainer<Sale>(
                 SaleRepository.GetAll().Include(s => s.Country).Include(s => s.ItemType), SaleRepository);
 
