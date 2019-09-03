@@ -163,10 +163,10 @@ namespace LinnworksSales.WebApi.Controllers
         /// <summary>
         /// Action that only support the HTTP DELET method, which bulk delete sales. 
         /// </summary>
-        /// <param name="id">Sales ID array to be deleted</param>
+        /// <param name="ids">Sales ID array to be deleted</param>
         /// <returns>400 Bad Request if sale by id doesn`t exist or 204 No Content if success</returns>
         [HttpDelete()]
-        public async Task<ActionResult> Delete([FromQuery]int[] ids)
+        public async Task<ActionResult> Delete([FromQuery(Name = "ids")]int[] ids)
         {
             IQueryable<Sale> sales = saleRepository.GetAll().Where(s => ids.Contains(s.Id));
             await saleRepository.BulkDeleteAsync(sales);
