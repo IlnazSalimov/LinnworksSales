@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LinnworksSales.Data;
 using LinnworksSales.Data.Models;
-using LinnworksSales.Data.Data.Models.Entity;
-using LinnworksSales.Data.Data.Repository;
-using LinnworksSales.Data.Data.Repository.Interfaces;
-using LinnworksSales.Data;
+using LinnworksSales.Data.Models.Entity;
+using LinnworksSales.Data.Repository;
+using LinnworksSales.Data.Repository.Interfaces;
+using LinnworksSales.WebApi.AutoMapper;
+using LinnworksSales.WebApi.Middleware.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using NLog.Web;
 using NLog.Extensions.Logging;
-using Microsoft.AspNetCore.Diagnostics;
+using NLog.Web;
 
-namespace LinnworksSales.Data
+namespace LinnworksSales.WebApi
 {
     public class Startup
     {
@@ -57,7 +52,7 @@ namespace LinnworksSales.Data
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger, ILoggerFactory loggerFactory)
         {
             env.ConfigureNLog("nlog.config");
             loggerFactory.AddNLog();
@@ -75,23 +70,10 @@ namespace LinnworksSales.Data
             }
             else
             {
-                // Global error handler
-                app.UseExceptionHandler(appBuilder =>
-                {
-                    appBuilder.Run(async context =>
-                    {
-                        IExceptionHandlerFeature exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
-                        if (exceptionHandlerFeature != null)
-                        {
-                            ILogger logger = loggerFactory.CreateLogger("Global exception logger");
-                            logger.LogError(500, exceptionHandlerFeature.Error, exceptionHandlerFeature.Error.Message);
-                        }
-
-                        context.Response.StatusCode = 500;
-                        await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
-                    });
-                });
+                app.UseHsts();
             }
+
+            app.ConfigureCustomExceptionMiddleware();
 
             app.UseCors(_myAllowSpecificOrigins);
             app.UseMvc();

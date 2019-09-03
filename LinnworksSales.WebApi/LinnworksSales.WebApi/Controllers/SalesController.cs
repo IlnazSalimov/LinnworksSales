@@ -1,31 +1,29 @@
-﻿using LinnworksSales.Data.Data.Repository.Interfaces;
-using LinnworksSales.Data.Enums;
-using LinnworksSales.Data.Models;
-using Microsoft.AspNetCore.Http;
+﻿using LinnworksSales.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LinnworksSales.Data.Models.Dto;
+using LinnworksSales.Data.Repository.Interfaces;
+using LinnworksSales.WebApi.AutoMapper;
 
-namespace LinnworksSales.Data.Controllers
+namespace LinnworksSales.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class SalesController : ControllerBase
     {
-        public IRegionRepository RegionRepository { get; set; }
+        private readonly IRegionRepository regionRepository;
 
-        public ICountryRepository CountryRepository { get; set; }
+        private readonly ICountryRepository countryRepository;
 
-        public IItemTypeRepository ItemTypeRepository { get; set; }
+        private readonly IItemTypeRepository itemTypeRepository;
 
-        public ISaleRepository SaleRepository { get; set; }
+        private readonly ISaleRepository saleRepository;
 
-        public ILogger Logger { get; set; }
+        private readonly ILogger logger;
+
         /// <summary>
         /// Provide access to object mapper
         /// </summary>
@@ -35,12 +33,12 @@ namespace LinnworksSales.Data.Controllers
             ICountryRepository countryRepository, IItemTypeRepository itemTypeRepository, ICommonMapper mapper, 
             ILogger<SalesController> logger)
         {
-            SaleRepository = orderRepository;
-            RegionRepository = regionRepository;
-            CountryRepository = countryRepository;
-            ItemTypeRepository = itemTypeRepository;
+            saleRepository = orderRepository;
+            this.regionRepository = regionRepository;
+            this.countryRepository = countryRepository;
+            this.itemTypeRepository = itemTypeRepository;
             Mapper = mapper;
-            Logger = logger;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -51,7 +49,7 @@ namespace LinnworksSales.Data.Controllers
         public IActionResult Get(int? page, int count, string sortColumn, string direction = "asc", string country = "")
         {
             PageEntitiesContainer<Sale> pageEntities = new PageEntitiesContainer<Sale>(
-                SaleRepository.GetAll().Include(s => s.Country).Include(s => s.ItemType), SaleRepository);
+                saleRepository.GetAll().Include(s => s.Country).Include(s => s.ItemType), saleRepository);
 
             pageEntities.RegisterFilter(new Filter(typeof(Country), country));
 
@@ -74,12 +72,12 @@ namespace LinnworksSales.Data.Controllers
         [HttpGet("{id}", Name = "GetSale")]
         public async Task<IActionResult> Get(int id)
         {
-            Sale dbOrder = await SaleRepository.GetAsync(id);
+            Sale dbOrder = await saleRepository.GetAsync(id);
 
             if (dbOrder == null)
             {
                 string message = $"Can not find sale with ID:{id}";
-                Logger.LogDebug(message);
+                logger.LogDebug(message);
                 return BadRequest(message);
             }
 
@@ -100,10 +98,10 @@ namespace LinnworksSales.Data.Controllers
             }
 
             Sale saleToSave = Mapper.Map<Sale>(sale);
-            if (!await SaleRepository.SaveAsync(saleToSave))
+            if (!await saleRepository.SaveAsync(saleToSave))
             {
                 string message = $"Creating a sale failed on save.";
-                Logger.LogWarning(message);
+                logger.LogWarning(message);
                 return BadRequest(message);
             }
 
@@ -120,7 +118,7 @@ namespace LinnworksSales.Data.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody]SalePutDto sale)
         {
-            Sale dbSale = await SaleRepository.GetAsync(id);
+            Sale dbSale = await saleRepository.GetAsync(id);
 
             if (sale == null)
             {
@@ -129,10 +127,10 @@ namespace LinnworksSales.Data.Controllers
 
             Mapper.Map(sale, dbSale);
 
-            if (!SaleRepository.Update(dbSale))
+            if (!saleRepository.Update(dbSale))
             {
                 string message = $"Updating a sale {id} failed on save.";
-                Logger.LogWarning(message);
+                logger.LogWarning(message);
                 return BadRequest(message);
             }
 
@@ -147,16 +145,16 @@ namespace LinnworksSales.Data.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            Sale order = await SaleRepository.GetAsync(id);
+            Sale order = await saleRepository.GetAsync(id);
             if (order == null)
             {
                 return NotFound();
             }
 
-            if (!SaleRepository.Delete(order))
+            if (!saleRepository.Delete(order))
             {
                 string message = $"Deleting a sale {id} failed on save.";
-                Logger.LogWarning(message);
+                logger.LogWarning(message);
                 return BadRequest(message);
             }
             return NoContent();
@@ -170,8 +168,8 @@ namespace LinnworksSales.Data.Controllers
         [HttpDelete()]
         public async Task<ActionResult> Delete([FromQuery]int[] ids)
         {
-            IQueryable<Sale> sales = SaleRepository.GetAll().Where(s => ids.Contains(s.Id));
-            await SaleRepository.BulkDeleteAsync(sales);
+            IQueryable<Sale> sales = saleRepository.GetAll().Where(s => ids.Contains(s.Id));
+            await saleRepository.BulkDeleteAsync(sales);
             return NoContent();
         }
     }

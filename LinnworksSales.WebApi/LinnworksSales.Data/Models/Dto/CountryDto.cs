@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace LinnworksSales.Data.Models
+﻿namespace LinnworksSales.Data.Models.Dto
 {
     public class CountryDto
     {

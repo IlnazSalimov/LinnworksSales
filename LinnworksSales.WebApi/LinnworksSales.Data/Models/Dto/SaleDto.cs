@@ -1,4 +1,4 @@
-﻿namespace LinnworksSales.Data.Models
+﻿namespace LinnworksSales.Data.Models.Dto
 {
     public class SaleDto
     {

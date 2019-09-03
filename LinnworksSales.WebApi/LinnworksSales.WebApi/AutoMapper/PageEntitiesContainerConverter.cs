@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using LinnworksSales.Data.Models;
-using LinnworksSales.Data.Data.Models.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using LinnworksSales.Data.Models.Dto;
+using LinnworksSales.Data.Models.Entity;
 
-namespace LinnworksSales.Data.AutoMapper
+namespace LinnworksSales.WebApi.AutoMapper
 {
     public class PageEntitiesContainerConverter<TSource, TDest> : ITypeConverter<PageEntitiesContainer<TSource>, PageEntitiesContainerDto<TDest>> where TSource: class, IEntity
     {

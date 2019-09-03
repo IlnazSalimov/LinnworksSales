@@ -1,25 +1,26 @@
-﻿using LinnworksSales.Data.Data.Repository.Interfaces;
+﻿using System.Linq;
 using LinnworksSales.Data.Models;
+using LinnworksSales.Data.Repository.Interfaces;
+using LinnworksSales.WebApi.AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace LinnworksSales.Data.Controllers
+namespace LinnworksSales.WebApi.Controllers
 {
     [Route("api/stat")]
     [ApiController]
     public class StatisticController : ControllerBase
     {
-        public ISaleRepository SaleRepository { get; set; }
+        private readonly ISaleRepository saleRepository;
+
         /// <summary>
         /// Provide access to object mapper
         /// </summary>
-        public ICommonMapper Mapper { get; }
+        private readonly ICommonMapper mapper;
 
         public StatisticController(ISaleRepository saleRepository, ICommonMapper mapper)
         {
-            SaleRepository = saleRepository;
-            Mapper = mapper;
+            this.saleRepository = saleRepository;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace LinnworksSales.Data.Controllers
         [HttpGet("getsoldorders")]
         public IActionResult GetSoldOrders(int country, int year)
         {
-            return Ok(SaleRepository.GetAll().Count(s => s.Country.Id == country && s.OrderDate.Year == year));
+            return Ok(saleRepository.GetAll().Count(s => s.Country.Id == country && s.OrderDate.Year == year));
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace LinnworksSales.Data.Controllers
         [HttpGet("getprofit")]
         public IActionResult GetProfit(int country, int year)
         {
-            return Ok(SaleRepository.GetAll().
+            return Ok(saleRepository.GetAll().
                 Where(s => s.Country.Id == country && s.OrderDate.Year == year).
                 Sum(s => s.UnitsSold * s.UnitPrice - s.UnitsSold * s.UnitCost));
         }

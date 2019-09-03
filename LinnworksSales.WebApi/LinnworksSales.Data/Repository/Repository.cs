@@ -1,14 +1,12 @@
-﻿using LinnworksSales.Data.Data.Models.Entity;
-using LinnworksSales.Data.Data.Repository.Interfaces;
-using LinnworksSales.Data;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Collections.Generic;
-using System;
+using LinnworksSales.Data.Models.Entity;
+using LinnworksSales.Data.Repository.Interfaces;
 using Z.BulkOperations;
 
-namespace LinnworksSales.Data.Data.Repository
+namespace LinnworksSales.Data.Repository
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
     {

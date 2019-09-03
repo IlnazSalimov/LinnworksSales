@@ -1,4 +1,4 @@
-﻿using LinnworksSales.Data.Data.Models.Entity;
+﻿using LinnworksSales.Data.Models.Entity;
 using LinnworksSales.Data.Repository.Interfaces;
 using System;
 using System.Collections.Generic;

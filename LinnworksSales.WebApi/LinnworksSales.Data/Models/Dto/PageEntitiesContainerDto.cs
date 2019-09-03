@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LinnworksSales.Data.Models
+namespace LinnworksSales.Data.Models.Dto
 {
     public class PageEntitiesContainerDto<TEntity>
     {

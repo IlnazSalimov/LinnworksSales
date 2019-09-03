@@ -1,41 +1,38 @@
 ﻿using System;
-using System.Text;
 using AutoMapper;
 using LinnworksSales.Data.Models;
-using LinnworksSales.Data.AutoMapper;
-using LinnworksSales.Data.Data.Models;
-using LinnworksSales.Data.Data.Repository.Interfaces;
+using LinnworksSales.Data.Models.Dto;
+using LinnworksSales.Data.Repository.Interfaces;
 
-namespace LinnworksSales.Data.Models
+namespace LinnworksSales.WebApi.AutoMapper
 {
     public class CommonMapper : ICommonMapper
     {
-        public IMapper Mapper { get; set; }
+        private readonly IMapper mapper;
+        private readonly ICountryRepository countryRepository;
+        private readonly IItemTypeRepository itemTypeRepository;
 
-        public ICountryRepository CountryRepository { get; set; }
-        public IItemTypeRepository ItemTypeRepository { get; set; }
-
-        public CommonMapper(ICountryRepository CountryRepository, IItemTypeRepository ItemTypeRepository)
+        public CommonMapper(ICountryRepository countryRepository, IItemTypeRepository itemTypeRepository)
         {
             MapperConfiguration config = GetConfiguration();
-            Mapper = config.CreateMapper();
-            this.CountryRepository = CountryRepository;
-            this.ItemTypeRepository = ItemTypeRepository;
+            mapper = config.CreateMapper();
+            this.countryRepository = countryRepository;
+            this.itemTypeRepository = itemTypeRepository;
         }
 
         public object Map(object source, Type sourceType, Type destinationType)
         {
-            return Mapper.Map(source, sourceType, destinationType);
+            return mapper.Map(source, sourceType, destinationType);
         }
 
         public object Map(object source, object destination)
         {
-            return Mapper.Map(source, destination);
+            return mapper.Map(source, destination);
         }
 
         public T Map<T>(object source) where T : class
         {
-            return (T)Mapper.Map(source, source.GetType(), typeof(T));
+            return (T)mapper.Map(source, source.GetType(), typeof(T));
         }
 
 
@@ -54,9 +51,9 @@ namespace LinnworksSales.Data.Models
                         expression => expression.MapFrom(m => m.ShipDate.ToShortDateString()));
                 cfg.CreateMap<SalePutDto, Sale>().
                     ForMember(destinationMember => destinationMember.Country,
-                        expression => expression.MapFrom(m => CountryRepository.Get(m.CountryId))).
+                        expression => expression.MapFrom(m => countryRepository.Get(m.CountryId))).
                     ForMember(destinationMember => destinationMember.ItemType,
-                        expression => expression.MapFrom(m => ItemTypeRepository.Get(m.ItemTypeId)));
+                        expression => expression.MapFrom(m => itemTypeRepository.Get(m.ItemTypeId)));
 
                 cfg.CreateMap(typeof(PageEntitiesContainer<>), typeof(PageEntitiesContainerDto<>)).ConvertUsing(typeof(PageEntitiesContainerConverter<,>));
             });

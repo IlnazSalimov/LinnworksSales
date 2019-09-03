@@ -1,8 +1,8 @@
-﻿using LinnworksSales.Data.Data.Repository.Interfaces;
+﻿using System.Linq;
 using LinnworksSales.Data.Models;
-using System.Linq;
+using LinnworksSales.Data.Repository.Interfaces;
 
-namespace LinnworksSales.Data.Data.Repository
+namespace LinnworksSales.Data.Repository
 {
     public class SaleRepository : Repository<Sale>, ISaleRepository
     {
@@ -14,8 +14,7 @@ namespace LinnworksSales.Data.Data.Repository
             {
                 if(filter.Type == typeof(Country))
                 {
-                    int selectdCountryId;
-                    if(filter.HasSelectedValue && int.TryParse(filter.SelectedValue, out selectdCountryId))
+                    if(filter.HasSelectedValue && int.TryParse(filter.SelectedValue, out var selectdCountryId))
                     {
                         entities = entities.Where(s => s.Country.Id == selectdCountryId);
                     }

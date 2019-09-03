@@ -1,11 +1,7 @@
-﻿using LinnworksSales.Data.Data.Models.Entity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
+using LinnworksSales.Data.Models.Entity;
 
-namespace LinnworksSales.Data.Models
+namespace LinnworksSales.Data.Models.Dto
 {
     public class ItemTypeDto : IEntity
     {

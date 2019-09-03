@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LinnworksSales.Data.Data.Repository.Interfaces;
-using LinnworksSales.Data;
-using LinnworksSales.Data.Models;
+﻿using LinnworksSales.Data.Models;
+using LinnworksSales.Data.Repository.Interfaces;
 
-namespace LinnworksSales.Data.Data.Repository
+namespace LinnworksSales.Data.Repository
 {
     public class CountryRepository : Repository<Country>, ICountryRepository
     {

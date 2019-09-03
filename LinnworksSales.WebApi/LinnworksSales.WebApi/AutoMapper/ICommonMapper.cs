@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LinnworksSales.Data.Models
+namespace LinnworksSales.WebApi.AutoMapper
 {
     public interface ICommonMapper
     {

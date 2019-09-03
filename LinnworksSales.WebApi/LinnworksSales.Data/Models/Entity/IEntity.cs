@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LinnworksSales.Data.Data.Models.Entity
+﻿namespace LinnworksSales.Data.Models.Entity
 {
     public interface IEntity
     {

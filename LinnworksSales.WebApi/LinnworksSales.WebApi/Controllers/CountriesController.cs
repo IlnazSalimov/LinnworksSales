@@ -1,24 +1,27 @@
-﻿using LinnworksSales.Data.Data.Repository.Interfaces;
-using LinnworksSales.Data.Models;
+﻿using LinnworksSales.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using LinnworksSales.Data.Models.Dto;
+using LinnworksSales.Data.Repository.Interfaces;
+using LinnworksSales.WebApi.AutoMapper;
 
-namespace LinnworksSales.Data.Controllers
+namespace LinnworksSales.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CountriesController : ControllerBase
     {
-        public ICountryRepository CountryRepository { get; set; }
+        private readonly ICountryRepository countryRepository;
+
         /// <summary>
         /// Provide access to object mapper
         /// </summary>
-        public ICommonMapper Mapper { get; }
+        private readonly ICommonMapper mapper;
 
         public CountriesController(ICountryRepository countryRepository, ICommonMapper mapper)
         {
-            CountryRepository = countryRepository;
-            Mapper = mapper;
+            this.countryRepository = countryRepository;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -28,7 +31,7 @@ namespace LinnworksSales.Data.Controllers
         [HttpGet]
         public IActionResult Get()
         { 
-            return Ok(Mapper.Map<List<CountryDto>>(CountryRepository.GetAll()));
+            return Ok(mapper.Map<List<CountryDto>>(countryRepository.GetAll()));
         }
     }
 }
