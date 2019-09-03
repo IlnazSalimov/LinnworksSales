@@ -94,18 +94,19 @@ export class DataTableComponent implements OnInit {
     }
     this.dialog.open(EditFormComponent, dialogConfig).
       afterClosed().subscribe((result) => {
-        this.reloadData();
+        if(result != undefined && result.isSuccessUpdate)
+          this.reloadData();
       });
   }
 
   private onReloadClick() {
+    this._snackBar.dismiss();
     this.reloadData();
     this.reloadCountryCollection();
     this.reloadItemTypeCollection();
   }
 
   private reloadData() {
-    this._snackBar.dismiss();
     this.selection.clear()
     this.dataSource = new DataTableDataSource(this.saleService);
     this.dataSource.loadSales(this.paginator.pageIndex + 1, this.paginator.pageSize,

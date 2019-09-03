@@ -51,12 +51,12 @@ export class EditFormComponent {
     this.saleService.update(sale,
       (result) => {
         this._snackBar.open('Sale updated successfully.', '', { duration: 6000 });
-        this.dialogRef.close();
+        this.dialogRef.close({isSuccessUpdate: true});
         this.isLoading = false
       },
       (result) => {
         this._snackBar.open(`Updating a sale failed. ${result.message}`, '', { duration: 6000 });
-        this.dialogRef.close();
+        this.dialogRef.close({isSuccessUpdate: false});
         this.isLoading = false
       });
   }
