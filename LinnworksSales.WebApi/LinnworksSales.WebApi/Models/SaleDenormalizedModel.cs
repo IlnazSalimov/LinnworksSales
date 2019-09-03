@@ -9,8 +9,6 @@ namespace LinnworksSales.Data.Models
     {
         public SaleDenormalizedModel(string[] lineData)
         {
-            try
-            {
                 Region = lineData[0];
                 Country = lineData[1];
                 ItemType = lineData[2];
@@ -22,11 +20,9 @@ namespace LinnworksSales.Data.Models
                 UnitsSold = lineData[8];
                 UnitPrice = lineData[9];
                 UnitCost = lineData[10];
-            }
-            // Continue import
-            catch (IndexOutOfRangeException) { }
         }
 
+        
         public string OrderId { get; set; }
         public string Region { get; set; }
         public string Country { get; set; }

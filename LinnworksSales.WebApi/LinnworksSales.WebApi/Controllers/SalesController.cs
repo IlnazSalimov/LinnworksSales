@@ -17,15 +17,15 @@ namespace LinnworksSales.Data.Controllers
     [ApiController]
     public class SalesController : ControllerBase
     {
-        private IRegionRepository RegionRepository { get; set; }
+        public IRegionRepository RegionRepository { get; set; }
 
-        private ICountryRepository CountryRepository { get; set; }
+        public ICountryRepository CountryRepository { get; set; }
 
-        private IItemTypeRepository ItemTypeRepository { get; set; }
+        public IItemTypeRepository ItemTypeRepository { get; set; }
 
-        private ISaleRepository SaleRepository { get; set; }
+        public ISaleRepository SaleRepository { get; set; }
 
-        private ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
         /// <summary>
         /// Provide access to object mapper
         /// </summary>

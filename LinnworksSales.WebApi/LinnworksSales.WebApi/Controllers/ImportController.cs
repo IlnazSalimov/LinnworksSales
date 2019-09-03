@@ -8,6 +8,7 @@ using LinnworksSales.Data.Enums;
 using LinnworksSales.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Z.BulkOperations;
 
 namespace LinnworksSales.WebApi.Controllers
@@ -24,12 +25,16 @@ namespace LinnworksSales.WebApi.Controllers
 
         public ISaleRepository SaleRepository { get; set; }
 
-        public ImportController(IRegionRepository regionRepository, ICountryRepository countryRepository, IItemTypeRepository itemTypeRepository, ISaleRepository saleRepository)
+        public ILogger Logger { get; set; }
+
+        public ImportController(IRegionRepository regionRepository, ICountryRepository countryRepository, 
+            IItemTypeRepository itemTypeRepository, ISaleRepository saleRepository, ILogger<ImportController> logger)
         {
             RegionRepository = regionRepository;
             CountryRepository = countryRepository;
             ItemTypeRepository = itemTypeRepository;
             SaleRepository = saleRepository;
+            Logger = Logger;
         }
 
         [HttpPost("sales")]
@@ -46,7 +51,7 @@ namespace LinnworksSales.WebApi.Controllers
                     }
                 }
             }
-            
+
             return Ok(new { count = files.Count, size = files.Sum(f => f.Length) });
         }
 
@@ -59,7 +64,16 @@ namespace LinnworksSales.WebApi.Controllers
             while (!streamReader.EndOfStream)
             {
                 data = streamReader.ReadLine();
-                salesDenormal.Add(new SaleDenormalizedModel(data.Split(seperators, StringSplitOptions.RemoveEmptyEntries)));
+                try
+                {
+                    salesDenormal.Add(new SaleDenormalizedModel(data.Split(seperators, StringSplitOptions.RemoveEmptyEntries)));
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    //Logger.LogError("One line in the import file have incorrect format.");
+                    // Continue import
+                    continue;
+                }
             }
 
             return salesDenormal;
